@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>현명한 소비 체크리스트</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Gowun+Batang:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2d5a8c;
+            --primary-light: #4a7bb8;
+            --secondary: #e85d4a;
+            --success: #3aa76d;
+            --warning: #f0a030;
+            --danger: #d94a4a;
+            --bg-main: #fafbfc;
+            --bg-card: #ffffff;
+            --text-primary: #1a2332;
+            --text-secondary: #6b7280;
+            --border: #e5e7eb;
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        /* 헤더 */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .header h1 {
+            font-family: 'Gowun Batang', serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* 통계 대시보드 */
+        .stats-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.6s ease-out 0.2s backwards;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 16px;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px var(--shadow);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            line-height: 1.3;
+        }
+
+        /* 통계 초기화 버튼 */
+        .stats-reset-container {
+            text-align: center;
+            margin-bottom: 20px;
+            animation: fadeIn 0.6s ease-out 0.25s backwards;
+        }
+
+        .stats-reset-btn {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 2px dashed var(--border);
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'IBM Plex Sans KR', sans-serif;
+            font-weight: 500;
+        }
+
+        .stats-reset-btn:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+            background: rgba(217, 74, 74, 0.05);
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 진행률 바 */
+        .progress-container {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px var(--shadow);
+            margin-bottom: 20px;
+            animation: fadeIn 0.6s ease-out 0.3s backwards;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e5e7eb;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-light), var(--primary));
+            border-radius: 20px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* 물건 입력 */
+        .item-input-container {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 20px;
+            border-radius: 14px;
+            border-left: 4px solid var(--primary);
+            margin-bottom: 20px;
+            animation: fadeIn 0.6s ease-out 0.35s backwards;
+        }
+
+        .item-input-container h3 {
+            font-family: 'Gowun Batang', serif;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.15rem;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .input-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-field label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+        }
+
+        .input-field input {
+            padding: 12px 14px;
+            border: 2px solid rgba(45, 90, 140, 0.2);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'IBM Plex Sans KR', sans-serif;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .input-field input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(45, 90, 140, 0.1);
+        }
+
+        .input-field input::placeholder {
+            color: #9ca3af;
+        }
+
+        /* 노동시간 표시 */
+        .work-time-display {
+            margin-top: 15px;
+            padding: 16px;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 2px solid #fbbf24;
+            animation: slideInUp 0.4s ease-out;
+        }
+
+        .work-time-icon {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .work-time-content {
+            flex: 1;
+        }
+
+        .work-time-label {
+            font-size: 0.8rem;
+            color: #92400e;
+            font-weight: 500;
+        }
+
+        .work-time-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #b45309;
+            margin: 2px 0;
+            line-height: 1.2;
+        }
+
+        .work-time-sublabel {
+            font-size: 0.8rem;
+            color: #92400e;
+            font-weight: 500;
+        }
+
+        /* 감정 체크 */
+        .emotion-check {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+            padding: 20px;
+            border-radius: 14px;
+            border-left: 4px solid var(--secondary);
+            margin-bottom: 20px;
+            animation: fadeIn 0.6s ease-out 0.4s backwards;
+        }
+
+        .emotion-check h3 {
+            font-family: 'Gowun Batang', serif;
+            color: var(--secondary);
+            margin-bottom: 12px;
+            font-size: 1.15rem;
+        }
+
+        .emotion-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .emotion-tag {
+            padding: 10px 16px;
+            border: 2px solid rgba(232, 93, 74, 0.3);
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+            flex: 0 0 auto;
+        }
+
+        .emotion-tag:hover {
+            border-color: var(--secondary);
+            transform: scale(1.05);
+        }
+
+        .emotion-tag.selected {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        /* 질문 카드 */
+        .question-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .step-card {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 4px 20px var(--shadow);
+            border-left: 4px solid var(--primary);
+            animation: slideInUp 0.4s ease-out;
+            transform-origin: center;
+        }
+
+        .step-card h3 {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        .psychological-tip {
+            background: #f0f4f8;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-left: 3px solid var(--primary-light);
+            line-height: 1.5;
+        }
+
+        .psychological-tip strong {
+            color: var(--primary);
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.85rem;
+        }
+
+        .psychological-tip strong {
+            color: var(--primary);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* 버튼 */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px 20px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: white;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'IBM Plex Sans KR', sans-serif;
+            position: relative;
+            overflow: hidden;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(45, 90, 140, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+            pointer-events: none;
+        }
+
+        button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        button:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 90, 140, 0.2);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        button.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* 결과 카드 */
+        .result-card {
+            border-left-width: 6px;
+            animation: resultPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .result-card.stop {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+            border-left-color: var(--danger);
+        }
+
+        .result-card.buy {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-left-color: var(--success);
+        }
+
+        .result-card.action {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-left-color: var(--warning);
+        }
+
+        .result-card h3 {
+            font-size: 1.3rem;
+            font-family: 'Gowun Batang', serif;
+        }
+
+        .result-explanation {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 2px solid rgba(0, 0, 0, 0.1);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .saved-amount {
+            margin-top: 15px;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .saved-amount-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--success);
+            display: block;
+            line-height: 1.2;
+        }
+
+        .saved-amount-label {
+            color: var(--text-secondary);
+            margin-top: 6px;
+            font-size: 0.9rem;
+        }
+
+        /* 액션 버튼 */
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .primary-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'IBM Plex Sans KR', sans-serif;
+            min-height: 48px;
+            width: 100%;
+        }
+
+        .primary-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(45, 90, 140, 0.3);
+        }
+
+        .secondary-btn {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .secondary-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* 리셋 버튼 */
+        .reset-container {
+            text-align: center;
+            margin-top: 30px;
+            animation: fadeIn 0.6s ease-out 0.5s backwards;
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            min-height: 48px;
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        /* 애니메이션 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes resultPop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* 반응형 */
+        @media (max-width: 640px) {
+            body {
+                padding: 12px;
+            }
+
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .header p {
+                font-size: 0.9rem;
+            }
+
+            .stats-dashboard {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 14px 10px;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+
+            .stat-label {
+                font-size: 0.75rem;
+            }
+
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .step-card {
+                padding: 18px;
+            }
+
+            .step-card h3 {
+                font-size: 1.05rem;
+            }
+
+            .result-card h3 {
+                font-size: 1.2rem;
+            }
+
+            .saved-amount-number {
+                font-size: 1.75rem;
+            }
+
+            .action-buttons {
+                gap: 8px;
+            }
+
+            .primary-btn {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (min-width: 641px) {
+            .input-group {
+                grid-template-columns: 2fr 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: row;
+            }
+
+            .primary-btn {
+                width: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <h1>💡 현명한 소비 체크리스트</h1>
+            <p>심리학 기반 충동 구매 예방 시스템</p>
+        </div>
+
+        <!-- 통계 대시보드 -->
+        <div class="stats-dashboard">
+            <div class="stat-card">
+                <span class="stat-number" id="totalChecks">0</span>
+                <div class="stat-label">총 체크 횟수</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="preventedCount">0</span>
+                <div class="stat-label">막은 충동 구매</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="savedMoney">0</span>
+                <div class="stat-label">절약한 금액 (천원)</div>
+            </div>
+        </div>
+
+        <!-- 통계 초기화 버튼 -->
+        <div class="stats-reset-container">
+            <button type="button" class="stats-reset-btn" onclick="resetStats(); return false;">
+                📊 통계 초기화
+            </button>
+        </div>
+
+        <!-- 진행률 -->
+        <div class="progress-container">
+            <div class="progress-label">
+                <span>진행 상황</span>
+                <span id="progressText">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- 물건 정보 입력 -->
+        <div class="item-input-container">
+            <h3>🛍️ 구매하고 싶은 물건</h3>
+            <div class="input-group">
+                <div class="input-field">
+                    <label for="itemName">물건 이름</label>
+                    <input type="text" id="itemName" placeholder="예: 무선 이어폰, 운동화, 가방 등" />
+                </div>
+                <div class="input-field">
+                    <label for="itemPrice">가격 (천원)</label>
+                    <input type="number" id="itemPrice" placeholder="예: 150" min="0" step="1"
+                        oninput="calculateWorkTime()" />
+                </div>
+            </div>
+            <div class="input-group" style="margin-top: 12px;">
+                <div class="input-field">
+                    <label for="hourlyWage">내 시급 (원)</label>
+                    <input type="number" id="hourlyWage" placeholder="예: 10000" min="0" step="100"
+                        oninput="calculateWorkTime()" />
+                </div>
+            </div>
+            <div class="work-time-display" id="workTimeDisplay" style="display: none;">
+                <div class="work-time-icon">⏰</div>
+                <div class="work-time-content">
+                    <div class="work-time-label">이 물건을 사려면</div>
+                    <div class="work-time-value" id="workTimeValue">0시간</div>
+                    <div class="work-time-sublabel">일해야 합니다</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 감정 체크 -->
+        <div class="emotion-check" id="emotionCheck">
+            <h3>🧠 지금 내 감정 상태는?</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                충동 구매의 70%는 감정적 상태에서 발생합니다. 먼저 현재 감정을 인식해보세요.
+            </p>
+            <div class="emotion-tags">
+                <div class="emotion-tag" onclick="selectEmotion(this, 'bored')">지루함 😐</div>
+                <div class="emotion-tag" onclick="selectEmotion(this, 'stressed')">스트레스 😣</div>
+                <div class="emotion-tag" onclick="selectEmotion(this, 'lonely')">외로움 😔</div>
+                <div class="emotion-tag" onclick="selectEmotion(this, 'excited')">흥분됨 🤩</div>
+                <div class="emotion-tag" onclick="selectEmotion(this, 'anxious')">불안함 😰</div>
+                <div class="emotion-tag" onclick="selectEmotion(this, 'happy')">행복함 😊</div>
+                <div class="emotion-tag" onclick="selectEmotion(this, 'neutral')">차분함 😌</div>
+            </div>
+            <div class="btn-group" style="margin-top: 20px;">
+                <button onclick="startQuestions()" id="startBtn" disabled>질문 시작하기</button>
+            </div>
+        </div>
+
+        <!-- 질문 플로우 -->
+        <div class="question-flow" id="questionFlow"></div>
+
+        <!-- 리셋 버튼 -->
+        <div class="reset-container">
+            <button class="reset-btn" onclick="resetAll()">🔄 처음부터 다시 체크하기</button>
+        </div>
+    </div>
+
+    <!-- js 연결 -->
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+        // 전역 변수
+        let selectedEmotion = null;
+        let currentPath = [];
+        let totalSteps = 8;
+        let itemName = '';
+        let itemPrice = 0;
+        let hourlyWage = 0;
+        let workHours = 0;
+
+        // 로컬 스토리지에서 통계 불러오기
+        function loadStats() {
+            return {
+                totalChecks: parseInt(localStorage.getItem('totalChecks') || '0'),
+                preventedCount: parseInt(localStorage.getItem('preventedCount') || '0'),
+                savedMoney: parseInt(localStorage.getItem('savedMoney') || '0')
+            };
+        }
+
+        // 통계 저장
+        function saveStats(stats) {
+            localStorage.setItem('totalChecks', stats.totalChecks);
+            localStorage.setItem('preventedCount', stats.preventedCount);
+            localStorage.setItem('savedMoney', stats.savedMoney);
+        }
+
+        // 통계 업데이트
+        function updateStats(prevented = false, savedAmount = 0) {
+            const stats = loadStats();
+            stats.totalChecks++;
+            if (prevented) {
+                stats.preventedCount++;
+                stats.savedMoney += savedAmount; // 이미 천원 단위
+            }
+            saveStats(stats);
+            displayStats(stats);
+        }
+
+        // 통계 표시 (천원 단위로 쉼표 포함)
+        function displayStats(stats) {
+            document.getElementById('totalChecks').textContent = stats.totalChecks;
+            document.getElementById('preventedCount').textContent = stats.preventedCount;
+            document.getElementById('savedMoney').textContent = stats.savedMoney.toLocaleString();
+        }
+
+        // 통계 초기화
+        function resetStats() {
+            console.log('resetStats 함수 호출됨');
+
+            const confirmed = confirm('정말로 모든 통계를 초기화하시겠습니까?\n이 작업은 되돌릴 수 없습니다.');
+            console.log('사용자 확인:', confirmed);
+
+            if (confirmed) {
+                try {
+                    // localStorage 직접 초기화
+                    localStorage.setItem('totalChecks', '0');
+                    localStorage.setItem('preventedCount', '0');
+                    localStorage.setItem('savedMoney', '0');
+                    console.log('localStorage 초기화 완료');
+
+                    // 화면 업데이트
+                    const totalChecksEl = document.getElementById('totalChecks');
+                    const preventedCountEl = document.getElementById('preventedCount');
+                    const savedMoneyEl = document.getElementById('savedMoney');
+
+                    if (totalChecksEl) totalChecksEl.textContent = '0';
+                    if (preventedCountEl) preventedCountEl.textContent = '0';
+                    if (savedMoneyEl) savedMoneyEl.textContent = '0';
+                    console.log('화면 업데이트 완료');
+
+                    // 초기화 애니메이션 효과
+                    document.querySelectorAll('.stat-card').forEach(card => {
+                        card.style.animation = 'none';
+                        setTimeout(() => {
+                            card.style.animation = 'resultPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+                        }, 10);
+                    });
+
+                    alert('✅ 통계가 초기화되었습니다!');
+                } catch (error) {
+                    console.error('초기화 중 오류 발생:', error);
+                    alert('❌ 초기화 중 오류가 발생했습니다: ' + error.message);
+                }
+            }
+
+            return false;
+        }
+
+        // 초기 통계 표시
+        displayStats(loadStats());
+
+        // 노동시간 계산
+        function calculateWorkTime() {
+            const price = parseFloat(document.getElementById('itemPrice').value) || 0;
+            const wage = parseFloat(document.getElementById('hourlyWage').value) || 0;
+
+            const display = document.getElementById('workTimeDisplay');
+            const valueEl = document.getElementById('workTimeValue');
+
+            if (price > 0 && wage > 0) {
+                const priceInWon = price * 1000; // 천원 단위를 원으로 변환
+                const hours = priceInWon / wage;
+
+                workHours = hours;
+
+                let timeText = '';
+                if (hours < 1) {
+                    const minutes = Math.round(hours * 60);
+                    timeText = `${minutes}분`;
+                } else if (hours < 24) {
+                    const fullHours = Math.floor(hours);
+                    const minutes = Math.round((hours - fullHours) * 60);
+                    if (minutes > 0) {
+                        timeText = `${fullHours}시간 ${minutes}분`;
+                    } else {
+                        timeText = `${fullHours}시간`;
+                    }
+                } else {
+                    const days = Math.floor(hours / 24);
+                    const remainingHours = Math.round(hours % 24);
+                    if (remainingHours > 0) {
+                        timeText = `${days}일 ${remainingHours}시간`;
+                    } else {
+                        timeText = `${days}일`;
+                    }
+                }
+
+                valueEl.textContent = timeText;
+                display.style.display = 'flex';
+            } else {
+                display.style.display = 'none';
+            }
+        }
+
+        // 진행률 업데이트
+        function updateProgress() {
+            const progress = (currentPath.length / totalSteps) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = Math.round(progress) + '%';
+        }
+
+        // 감정 선택
+        function selectEmotion(element, emotion) {
+            document.querySelectorAll('.emotion-tag').forEach(tag => {
+                tag.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            selectedEmotion = emotion;
+            document.getElementById('startBtn').disabled = false;
+        }
+
+        // 감정별 메시지
+        const emotionMessages = {
+            'bored': '지루함으로 인한 구매는 일시적 흥분을 주지만 곧 후회로 이어집니다.',
+            'stressed': '스트레스 해소를 위한 구매는 더 큰 재정적 스트레스를 만들 수 있습니다.',
+            'lonely': '외로움은 소비로 채워지지 않습니다. 사람과의 연결이 더 중요합니다.',
+            'excited': '흥분 상태에서는 판단력이 흐려집니다. 24시간 후 다시 생각해보세요.',
+            'anxious': '불안감은 구매로 해결되지 않습니다. 근본 원인을 찾아보세요.',
+            'happy': '행복한 상태도 과소비로 이어질 수 있습니다. 신중하게 판단하세요.',
+            'neutral': '좋은 상태입니다! 차분한 마음으로 합리적 판단을 할 수 있습니다.'
+        };
+
+        // 질문 단계 정의
+        const steps = {
+            'START': {
+                question: "Q1. 이미 가지고 있거나 대체 가능한 물건인가요?",
+                tip: "소유 효과(Endowment Effect): 이미 가진 것의 가치를 과소평가하고 새로운 것을 과대평가하는 심리적 편향입니다.",
+                yes: 'STOP1',
+                no: 'Q2'
+            },
+            'Q2': {
+                question: "Q2. 이것이 없어서 일상생활에 구체적인 불편함이 있나요?",
+                tip: "필요 vs 욕구 구분: 진짜 필요한 것인지, 단순히 갖고 싶은 것인지 구분하는 것이 중요합니다.",
+                yes: 'Q5',
+                no: 'Q3'
+            },
+            'Q3': {
+                question: "Q3. 이 구매가 단순히 정신적 만족감 때문인가요?",
+                tip: "도파민 트랩: 구매 순간의 짧은 쾌감은 곧 사라지지만, 후회는 오래 남습니다.",
+                yes: 'Q4',
+                no: 'Q5'
+            },
+            'Q4': {
+                question: "Q4. 이 물건을 발견한 지 24시간이 지났나요?",
+                tip: "쿨링 오프 기법: 24시간의 시간을 두면 충동 구매의 80%를 방지할 수 있습니다.",
+                yes: 'Q5',
+                no: 'STOP2'
+            },
+            'Q5': {
+                question: "Q5. 이 물건을 주 3회 이상 사용하게 될까요?",
+                tip: "사용 빈도 예측: 대부분의 충동 구매는 실제 사용 빈도를 과대평가합니다.",
+                yes: 'Q6',
+                no: 'STOP3'
+            },
+            'Q6': {
+                question: "Q6. 현재 잔고가 충분하며, 안전하게 검증된 제품인가요?",
+                tip: "재정 건강성: 구매가 미래의 재정적 안정성을 해치지 않는지 확인하세요.",
+                yes: 'Q7',
+                no: 'STOP4'
+            },
+            'Q7': {
+                question: "Q7. 나눔이나 중고로 먼저 구할 수 있나요?",
+                tip: "지속가능한 소비: 중고거래는 경제적이면서도 환경에도 좋은 선택입니다.",
+                yes: 'ACTION1',
+                no: 'Q8'
+            },
+            'Q8': {
+                question: "Q8. 온라인 배송과 오프라인 구매 중 어디가 더 합리적인가요?",
+                tip: "총 비용 계산: 배송비, 교통비, 시간 비용까지 모두 고려하세요.",
+                online: 'BUY',
+                offline: 'BUY'
+            }
+        };
+
+        // 결과 정의
+        const results = {
+            'STOP1': {
+                title: "🛑 STOP! 중복 소비입니다",
+                type: 'stop',
+                explanation: "이미 가지고 있는 것으로 충분합니다. 새로운 구매는 자원의 낭비이며, 기존 물건의 가치를 재발견하는 것이 더 현명합니다.",
+                psychology: "디드로 효과(Diderot Effect)를 조심하세요. 하나의 새 물건이 연쇄적인 구매욕구를 만들어냅니다.",
+                avgSaved: 5
+            },
+            'STOP2': {
+                title: "🛑 STOP! 24시간 후 다시 생각하세요",
+                type: 'stop',
+                explanation: "충동적 구매 욕구는 24시간 이내에 80% 감소합니다. 내일 다시 생각해도 늦지 않습니다.",
+                psychology: "즉각적 만족 추구(Instant Gratification)는 장기적 후회로 이어집니다. 기다림은 현명한 선택의 시작입니다.",
+                avgSaved: 8
+            },
+            'STOP3': {
+                title: "🛑 STOP! 가성비가 너무 낮습니다",
+                type: 'stop',
+                explanation: "사용 빈도가 낮은 물건은 결국 공간과 돈의 낭비가 됩니다. 정말 필요할 때 다시 고려하세요.",
+                psychology: "매몰 비용의 오류(Sunk Cost Fallacy)를 피하세요. 구매 후 사용하지 않는 것에 대한 죄책감이 더 큽니다.",
+                avgSaved: 10
+            },
+            'STOP4': {
+                title: "🛑 STOP! 재정 건전성이 우선입니다",
+                type: 'stop',
+                explanation: "현재 재정 상태가 불안정하거나 제품의 안전성이 검증되지 않았습니다. 더 안전한 선택을 하세요.",
+                psychology: "미래 할인(Future Discounting): 미래의 큰 고통보다 현재의 작은 즐거움을 선택하는 경향을 극복하세요.",
+                avgSaved: 15
+            },
+            'ACTION1': {
+                title: "⚠️ ACTION! 중고거래를 먼저 확인하세요",
+                type: 'action',
+                explanation: "당근마켓, 중고나라 등에서 먼저 찾아보세요. 같은 물건을 훨씬 저렴하게 구할 수 있습니다.",
+                psychology: "앵커링 효과(Anchoring Effect): 정가에 고정되지 말고, 실제 가치를 다양한 경로에서 비교하세요.",
+                links: [
+                    { name: "당근마켓", url: "karrot://", web: "https://www.daangn.com" },
+                    { name: "중고나라", url: "joonggonara://", web: "https://web.joongna.com" },
+                    { name: "번개장터", url: "bunjang://", web: "https://m.bunjang.co.kr" }
+                ],
+                avgSaved: 7
+            },
+            'BUY': {
+                title: "✅ BUY! 충분히 고민하셨네요",
+                type: 'buy',
+                explanation: "모든 단계를 신중하게 거쳐 합리적인 결정을 내리셨습니다. 현명한 소비를 축하합니다!",
+                psychology: "의사결정의 질은 과정의 신중함에서 나옵니다. 이 물건이 당신의 삶에 실질적 가치를 더하길 바랍니다.",
+                avgSaved: 0
+            }
+        };
+
+        // 질문 시작
+        function startQuestions() {
+            // 물건 정보 가져오기
+            itemName = document.getElementById('itemName').value.trim();
+            itemPrice = parseFloat(document.getElementById('itemPrice').value) || 0;
+            hourlyWage = parseFloat(document.getElementById('hourlyWage').value) || 0;
+
+            // 유효성 검사
+            if (!itemName) {
+                alert('물건 이름을 입력해주세요!');
+                document.getElementById('itemName').focus();
+                return;
+            }
+
+            if (itemPrice <= 0) {
+                alert('가격을 입력해주세요!');
+                document.getElementById('itemPrice').focus();
+                return;
+            }
+
+            if (hourlyWage <= 0) {
+                alert('시급을 입력해주세요!');
+                document.getElementById('hourlyWage').focus();
+                return;
+            }
+
+            // 감정 체크와 물건 입력 숨기기
+            document.getElementById('emotionCheck').style.display = 'none';
+            document.querySelector('.item-input-container').style.display = 'none';
+
+            // 첫 질문 표시
+            showQuestion('START');
+        }
+
+        // 질문 표시
+        function showQuestion(stepKey) {
+            const step = steps[stepKey];
+            const questionFlow = document.getElementById('questionFlow');
+
+            currentPath.push(stepKey);
+            updateProgress();
+
+            let buttonsHtml = '';
+            if (stepKey === 'Q8') {
+                buttonsHtml = `
+                <button onclick="handleChoice('${stepKey}', 'online')">온라인 배송</button>
+                <button onclick="handleChoice('${stepKey}', 'offline')">오프라인 구매</button>
+            `;
+            } else {
+                buttonsHtml = `
+                <button onclick="handleChoice('${stepKey}', 'yes')">네</button>
+                <button onclick="handleChoice('${stepKey}', 'no')">아니오</button>
+            `;
+            }
+
+            const cardHtml = `
+            <div class="step-card" id="step-${stepKey}">
+                <h3>${step.question}</h3>
+                <div class="psychological-tip">
+                    <strong>💭 심리학 인사이트</strong>
+                    ${step.tip}
+                </div>
+                <div class="btn-group">
+                    ${buttonsHtml}
+                </div>
+            </div>
+        `;
+
+            questionFlow.insertAdjacentHTML('beforeend', cardHtml);
+
+            // 스크롤
+            setTimeout(() => {
+                const newCard = document.getElementById(`step-${stepKey}`);
+                newCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        // 선택 처리
+        function handleChoice(currentKey, choice) {
+            const currentCard = document.getElementById(`step-${currentKey}`);
+            const buttons = currentCard.querySelectorAll('button');
+
+            // 버튼 비활성화 및 선택 표시
+            buttons.forEach((btn, index) => {
+                btn.disabled = true;
+                if ((choice === 'yes' && index === 0) ||
+                    (choice === 'no' && index === 1) ||
+                    (choice === 'online' && index === 0) ||
+                    (choice === 'offline' && index === 1)) {
+                    btn.classList.add('selected');
+                }
+            });
+
+            // 다음 단계
+            const nextKey = steps[currentKey][choice];
+
+            if (results[nextKey]) {
+                // 결과 표시
+                showResult(nextKey);
+            } else {
+                // 다음 질문
+                showQuestion(nextKey);
+            }
+        }
+
+        // 중고거래 앱 열기
+        function openMarketApp(appUrl, webUrl, appName) {
+            // 모바일 환경 확인
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+            if (isMobile) {
+                // 앱 스킴 시도
+                window.location.href = appUrl;
+
+                // 앱이 설치되어 있지 않으면 웹 버전으로 이동
+                setTimeout(() => {
+                    window.location.href = webUrl;
+                }, 1500);
+            } else {
+                // 데스크톱에서는 웹 버전 열기
+                window.open(webUrl, '_blank');
+            }
+        }
+
+        // 결과 표시
+        function showResult(resultKey) {
+            const result = results[resultKey];
+            const questionFlow = document.getElementById('questionFlow');
+
+            // 실제 절약 금액 계산 (물건 가격 기준, 천원 단위)
+            const actualSaved = result.type === 'stop' || result.type === 'action' ? itemPrice : 0;
+
+            // 통계 업데이트
+            const prevented = result.type === 'stop' || result.type === 'action';
+            updateStats(prevented, Math.round(actualSaved));
+
+            // 노동시간 메시지 생성
+            let workTimeMessage = '';
+            if (workHours > 0) {
+                let timeText = '';
+                if (workHours < 1) {
+                    const minutes = Math.round(workHours * 60);
+                    timeText = `${minutes}분`;
+                } else if (workHours < 24) {
+                    const fullHours = Math.floor(workHours);
+                    const minutes = Math.round((workHours - fullHours) * 60);
+                    if (minutes > 0) {
+                        timeText = `${fullHours}시간 ${minutes}분`;
+                    } else {
+                        timeText = `${fullHours}시간`;
+                    }
+                } else {
+                    const days = Math.floor(workHours / 24);
+                    const remainingHours = Math.round(workHours % 24);
+                    if (remainingHours > 0) {
+                        timeText = `${days}일 ${remainingHours}시간`;
+                    } else {
+                        timeText = `${days}일`;
+                    }
+                }
+
+                if (result.type === 'buy') {
+                    workTimeMessage = `<p style="margin-top: 15px;"><strong>⏰ 노동시간 가치:</strong><br>이 물건은 당신의 <span style="color: var(--warning); font-weight: 700;">${timeText}</span> 노동의 결과입니다. 그만한 가치가 있는 물건인가요?</p>`;
+                } else if (result.type === 'stop' || result.type === 'action') {
+                    workTimeMessage = `<p style="margin-top: 15px;"><strong>⏰ 절약한 시간:</strong><br><span style="color: var(--success); font-weight: 700;">${timeText}</span>의 노동 시간을 절약했습니다!</p>`;
+                }
+            }
+
+            let actionButtonsHtml = '';
+            if (result.type === 'action' && result.links) {
+                actionButtonsHtml = `
+                <div class="action-buttons">
+                    ${result.links.map(link =>
+                    `<button class="primary-btn" onclick="openMarketApp('${link.url}', '${link.web}', '${link.name}')">${link.name} 열기</button>`
+                ).join('')}
+                </div>
+            `;
+            }
+
+            let savedAmountHtml = '';
+            if (actualSaved > 0) {
+                savedAmountHtml = `
+                <div class="saved-amount">
+                    <div style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 10px;">
+                        "${itemName}" 구매를 보류하여
+                    </div>
+                    <span class="saved-amount-number">${actualSaved.toLocaleString()}원</span>
+                    <div class="saved-amount-label">절약하셨습니다! 🎉</div>
+                </div>
+            `;
+            } else if (result.type === 'buy') {
+                savedAmountHtml = `
+                <div class="saved-amount" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);">
+                    <div style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 10px;">
+                        "${itemName}"
+                    </div>
+                    <span class="saved-amount-number" style="color: var(--success);">${itemPrice.toLocaleString()}원</span>
+                    <div class="saved-amount-label">합리적인 소비 결정입니다! ✨</div>
+                </div>
+            `;
+            }
+
+            const resultHtml = `
+            <div class="step-card result-card ${result.type}">
+                <h3>${result.title}</h3>
+                <div class="result-explanation">
+                    <p><strong>📊 결과 분석:</strong><br>${result.explanation}</p>
+                    <p style="margin-top: 15px;"><strong>🧠 심리학적 배경:</strong><br>${result.psychology}</p>
+                    <p style="margin-top: 15px;"><strong>😊 당신의 감정:</strong> ${emotionMessages[selectedEmotion]}</p>
+                    ${workTimeMessage}
+                </div>
+                ${savedAmountHtml}
+                ${actionButtonsHtml}
+            </div>
+        `;
+
+            questionFlow.insertAdjacentHTML('beforeend', resultHtml);
+
+            // 스크롤
+            setTimeout(() => {
+                const resultCard = questionFlow.lastElementChild;
+                resultCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+
+            // 진행률 100%
+            document.getElementById('progressFill').style.width = '100%';
+            document.getElementById('progressText').textContent = '100%';
+        }
+
+        // 전체 리셋
+        function resetAll() {
+            selectedEmotion = null;
+            currentPath = [];
+            itemName = '';
+            itemPrice = 0;
+            hourlyWage = 0;
+            workHours = 0;
+
+            document.getElementById('emotionCheck').style.display = 'block';
+            document.querySelector('.item-input-container').style.display = 'block';
+            document.getElementById('questionFlow').innerHTML = '';
+            document.getElementById('startBtn').disabled = true;
+
+            // 입력 필드 초기화
+            document.getElementById('itemName').value = '';
+            document.getElementById('itemPrice').value = '';
+            document.getElementById('hourlyWage').value = '';
+            document.getElementById('workTimeDisplay').style.display = 'none';
+
+            document.querySelectorAll('.emotion-tag').forEach(tag => {
+                tag.classList.remove('selected');
+            });
+
+            updateProgress();
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+
+</body>
+
+</html>
